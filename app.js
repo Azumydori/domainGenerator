@@ -1,25 +1,43 @@
+const pronouns = ["a", "the"];
+const adjs = ["great", "stinky", "loud", "tiny", "annoying", "fluffy", "just"];
+const nouns = ["knife","hamster", "breathcode", "italia", "malcom", "doit"];
+const extensions = ["com", "es", "io", "org", "net", "it", "de"];
+
 
 window.onload = () => {
-    document.querySelector("#button").addEventListener("click", () => {
-      document.querySelector("#generator").innerHTML = domainGenerator();
-    });
-  };
+  let result = document.querySelector('#domain');
+  let listDomain = generateDomain();
+  for (const domain of listDomain) {
+    console.log(domain);
+    result.innerHTML = result.innerHTML.concat('<li>', domain, '</li>');
+  }
+};
 
-let domainGenerator = () => {
+function generateDomain() {
+  let domain = [];
 
-let pronoun = ["a", "the"];
-let adj = ["great","big", "small", "thin", "fat", "stinky", "loud", "tiny", "annoying", "fluffy"];
-let noun = ["knife", "toy", "cat", "juice", "pen","stingray","raccoon", "flamingo", "hamster", "dragon"];
-let domainExt = [".com", ".es", ".io", ".org", ".net"];
+  for (const pronoun of pronouns) {
+    for (const adj of adjs) {
+      for (const noun of nouns) {
+        for (const extension of extensions) {
+          let firstPart = pronoun + noun;
 
-let proIndex = Math.floor(Math.random() * pronoun.length);
-let adjIndex = Math.floor(Math.random() * adj.length);
-let nounIndex = Math.floor(Math.random() * noun.length);
-let domainIndex = Math.floor(Math.random() * domainExt.length);
+          if (checkExtension(firstPart, extension)) {
 
-return (
-    pronoun[proIndex] + adj[adjIndex] + noun[nounIndex] + domainExt[domainIndex]
+            let auxList = [...firstPart];
+            auxList.splice(firstPart.length - extension.length, 0, '.');
+            domain.push(auxList.join(''));
+          } else {
+            domain.push(firstPart + '.' + extension);
+          }
+        }
+      }
+    }
+  }
 
-    );
+  return domain;
+}
 
+const checkExtension = (domainFirstPart, extension) => {
+  return domainFirstPart.includes(extension, domainFirstPart.length - extension.length);
 };
